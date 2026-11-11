@@ -1,0 +1,169 @@
+# ---------------------------------------------------------------------------
+# Toronto Hydro-Electric System Limited — Residential Service (RPP)
+# Rates verified 2026-11-10 against:
+#   https://www.torontohydro.com/for-home/rates
+#   https://www.oeb.ca/consumer-information-and-protection/electricity-rates/historical-electricity-rates
+#   Toronto Hydro 2026 Tariff of Rates and Charges (EB-2025-0006)
+#
+# HOW TO KEEP THIS CURRENT
+#   * Commodity (electricity) prices change every November 1.
+#   * Delivery charges change every January 1.
+#   * The Ontario Electricity Rebate (OER) can change at any time.
+#   * Tier thresholds change May 1 (summer) and November 1 (winter).
+# Add a new [[commodity]] / [[delivery]] / [[regulatory]] / [[rebate]] block
+# with a later effective_from date. Never edit history: statements already
+# issued must stay reproducible.
+#
+# All rates are dollars per kWh unless noted. Fixed monthly charges are kept
+# here for transparency but are deliberately excluded from EV billing: they do
+# not change when you plug in a car.
+# ---------------------------------------------------------------------------
+
+currency = "CAD"
+timezone = "America/Toronto"
+hst = 0.13
+
+# Toronto Hydro "Total Loss Factor - Secondary Metered Customer < 5,000 kW".
+# Delivery and regulatory charges are billed on metered kWh x loss factor.
+# Confirmed on the utility's own sample bill: 700 kWh metered -> 720.65 kWh
+# adjusted (720.65 / 700 = 1.0295).
+[[loss_factor]]
+effective_from = 2025-01-01
+value = 1.0295
+source = "Toronto Hydro 2026 Tariff of Rates and Charges, EB-2025-0006"
+
+[[loss_factor]]
+effective_from = 2026-01-01
+value = 1.0295
+source = "Toronto Hydro 2026 Tariff (EB-2025-0006); 700 kWh -> 720.65 kWh on sample bill"
+
+# ---------------------------------------------------------------------------
+# Commodity / Regulated Price Plan
+# ---------------------------------------------------------------------------
+
+[[commodity]]
+effective_from = 2025-11-01
+source = "https://www.torontohydro.com/for-home/rates (archived; OEB historical table)"
+commodity_tier_threshold_summer_kwh = 600
+commodity_tier_threshold_winter_kwh = 1000
+
+[commodity.tou]
+off_peak = 0.098
+mid_peak = 0.157
+on_peak = 0.203
+
+[commodity.ulo]
+ultra_low_overnight = 0.039
+weekend_off_peak = 0.098
+mid_peak = 0.157
+on_peak = 0.391
+
+[commodity.tiered]
+tier1 = 0.120
+tier2 = 0.142
+
+[[commodity]]
+effective_from = 2026-11-01
+source = "https://www.torontohydro.com/for-home/rates"
+commodity_tier_threshold_summer_kwh = 600
+commodity_tier_threshold_winter_kwh = 1000
+
+[commodity.tou]
+off_peak = 0.091
+mid_peak = 0.146
+on_peak = 0.189
+
+[commodity.ulo]
+ultra_low_overnight = 0.037
+weekend_off_peak = 0.091
+mid_peak = 0.146
+on_peak = 0.377
+
+[commodity.tiered]
+tier1 = 0.112
+tier2 = 0.132
+
+# ---------------------------------------------------------------------------
+# Delivery — volumetric only. These are the charges that actually grow when
+# the car charges. Applied to metered kWh x loss_factor.
+# ---------------------------------------------------------------------------
+
+[[delivery]]
+effective_from = 2025-01-01
+source = "Toronto Hydro 2025 Tariff (EB-2023-0195)"
+delivery_adjustment = 0.0
+
+[delivery.components]
+deferral_variance = 0.00230
+capacity_based_recovery = 0.00018
+transmission = 0.02200          # network 0.01295 + line/transformation 0.00905
+
+[delivery.fixed_per_30_days]
+service_charge = 49.59
+smart_metering_entity = 0.41
+wireline_pole_attachment = 0.04
+pils_and_tax_variance = -0.09
+gain_on_property_sale = -0.65
+operations_centre_bonus = -1.79
+wireless_pole_attachment = -0.03
+useful_life_2025 = -1.41
+useful_life_assets_2025 = -0.34
+cloud_computing = 0.20
+standard_supply_admin = 0.25
+
+[[delivery]]
+effective_from = 2026-01-01
+source = "Toronto Hydro 2026 Tariff (EB-2025-0006) + torontohydro.com/for-home/rates"
+# Optional calibration for the small gap between the published tariff and a
+# real bill. See `tec calibrate`. Dollars per *metered* kWh.
+delivery_adjustment = 0.0
+
+[delivery.components]
+deferral_variance = 0.00112
+capacity_based_recovery = 0.00048
+transmission = 0.02241          # published combined transmission rate
+
+[delivery.fixed_per_30_days]
+service_charge = 51.18
+smart_metering_entity = 0.41
+wireline_pole_attachment = 0.04
+wireless_pole_attachment = -0.03
+useful_life_2025 = -1.41
+useful_life_assets_2025 = -0.34
+useful_life_assets_2026 = -0.99
+standard_supply_admin = 0.25
+
+# ---------------------------------------------------------------------------
+# Regulatory — volumetric, also applied to metered kWh x loss_factor.
+# ---------------------------------------------------------------------------
+
+[[regulatory]]
+effective_from = 2025-01-01
+source = "Toronto Hydro 2025 Tariff (EB-2023-0195)"
+
+[regulatory.components]
+wholesale_market_service = 0.0059   # WMS 0.0041 + CBR 0.0004 + RRRP 0.0014
+
+[[regulatory]]
+effective_from = 2026-01-01
+source = "https://www.torontohydro.com/for-home/rates"
+
+[regulatory.components]
+wholesale_market_service = 0.0053
+
+# ---------------------------------------------------------------------------
+# Ontario Electricity Rebate
+# Applied to the pre-HST subtotal and shown as a credit. HST is still charged
+# on the full pre-rebate subtotal — verified against Toronto Hydro's sample
+# bill (subtotal 162.09, HST 21.08, OER 38.09, total 145.08).
+# ---------------------------------------------------------------------------
+
+[[rebate]]
+effective_from = 2025-11-01
+oer = 0.235
+source = "https://www.torontohydro.com/for-home/ontario-electricity-rebate"
+
+[[rebate]]
+effective_from = 2026-11-01
+oer = 0.157
+source = "https://www.torontohydro.com/for-home/ontario-electricity-rebate"

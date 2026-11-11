@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+
+# Local data (never commit your usage or bills)
+data/
+statements/
+config/local.toml
+config/rates.local.toml
+config/rates.auto.toml
+*.db
+*.db-wal
+*.db-shm
+
+# Research scratch
+.research/
+
+# OS
+.DS_Store
+
+# Test / coverage caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local secrets
+.env
+.env.*

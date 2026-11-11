@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tesla-energy-cost"
+version = "0.1.0"
+description = "Meter-accurate EV electricity billing for Ontario renters"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "tesla-energy-cost contributors" }]
+keywords = ["tesla", "toronto-hydro", "electricity", "billing", "tou", "ulo", "energy"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://github.com/azhar9/tesla-energy-cost"
+Repository = "https://github.com/azhar9/tesla-energy-cost"
+Issues = "https://github.com/azhar9/tesla-energy-cost/issues"
+
+[project.scripts]
+tec = "tesla_energy_cost.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

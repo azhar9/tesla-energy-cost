@@ -1,0 +1,69 @@
+# ---------------------------------------------------------------------------
+# Your setup. Copy to config/local.toml to override any of these values
+# without touching the committed defaults (local.toml is git-ignored).
+# ---------------------------------------------------------------------------
+
+timezone = "America/Toronto"
+currency = "CAD"
+
+[billing]
+# Which price plan is on the landlord's Toronto Hydro account?
+#   "tou"    = Time-of-Use (default)
+#   "ulo"    = Ultra-Low Overnight (opt-in; great if you charge 11pm-7am)
+#   "tiered" = Tiered
+plan = "tou"
+
+# "marginal"     = pay only the cost the car actually added to the bill
+#                  (energy + volumetric delivery + regulatory, less OER, plus HST).
+#                  Does NOT include the fixed monthly charges, because they are
+#                  identical with or without the car.
+# "proportional" = pay your kWh share of the landlord's entire bill, fixed
+#                  charges and all. simple to verify, slightly overpays.
+method = "marginal"
+
+# Used by the proportional method and by tiered pricing.
+# household_monthly_kwh = 900
+
+statement_dir = "statements"
+
+[meter]
+# Label of the physical meter feeding the car. Must match the --source used
+# when importing/polling. Examples: "shelly-plug", "shelly-em", "manual".
+source = "shelly-plug"
+
+# If you only take one cumulative meter reading a month and always charge in
+# one price period, set this to that period (off_peak / ultra_low_overnight).
+# Coarse "reading" data will then be assigned entirely to that period instead
+# of being smeared across the day. Leave blank for measured interval data.
+assume_period_for_coarse_data = ""
+
+# Shelly Gen2/Gen3 local API address (Plus Plug US, Plus Plug, EM, Pro EM).
+# Used by `tec poll shelly` when --host is omitted. The original Shelly Plug US
+# is Gen1 and is NOT supported; buy the "Plus" model (SNPL-00116US) instead.
+[meter.shelly]
+host = "192.168.1.50"
+
+# Optional Tesla Fleet API adapter. This is approximate and NOT billing-grade:
+# use it for a trend only, never as the landlord's meter.
+[tesla]
+# Numeric vehicle id from the Fleet API (not the VIN).
+vehicle_id = ""
+# Regional host; North America is the default.
+# api_base = "https://fleet-api.prd.na.vn.cloud.tesla.com"
+# The OAuth access token is read from the TESLA_ACCESS_TOKEN environment
+# variable so it never lands in a config file.
+
+[charger]
+label = "Tesla Mobile Connector (NEMA 5-15)"
+voltage = 120
+max_amps = 12
+max_kw = 1.44
+
+[storage]
+path = "data/energy.db"
+
+[utility]
+name = "Toronto Hydro-Electric System Limited"
+rate_class = "Residential Service"
+account = ""
+premises = "Toronto, ON"

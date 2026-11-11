@@ -1,0 +1,13 @@
+# tesla-energy-cost cron examples
+# Replace /path/to/tesla-energy-cost with your checkout.
+
+# Poll a Shelly every 5 minutes. A cumulative counter survives missed polls;
+# power-only devices need this cadence for good accuracy.
+*/5 * * * * cd /path/to/tesla-energy-cost && .venv/bin/tec poll shelly >> data/poll.log 2>&1
+
+# On the 1st at 08:00: check/apply rates and write last month's statements.
+0 8 1 * * cd /path/to/tesla-energy-cost && .venv/bin/tec monthly --update-rates --yes >> data/monthly.log 2>&1
+
+# Every Monday at 09:00: exit 2 if Toronto Hydro/OEB rates changed. Cron will
+# normally email the output; review it and run `tec rates update --apply --yes`.
+0 9 * * 1 cd /path/to/tesla-energy-cost && .venv/bin/tec rates update --check >> data/rates.log 2>&1
